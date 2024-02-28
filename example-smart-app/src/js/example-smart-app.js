@@ -21,10 +21,18 @@
                       }
                     }
                   });
+        var appt = smart.patient.api.search({
+                    type: 'Appointment',
+                    query: {
+                      date: {
+                        $gte: '2023-12-30T09:00:00Z'
+                      }
+                    }
+                  });
 
-        $.when(pt, obv).fail(onError);
+        $.when(pt, obv, appt).fail(onError);
 
-        $.when(pt, obv).done(function(patient, obv) {
+        $.when(pt, obv, appt).done(function(patient, obv, appt) {
           var byCodes = smart.byCodes(obv, 'code');
           var gender = patient.gender;
 
@@ -62,6 +70,16 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
+          // Process appointment data
+          if (appt && appt.length > 0) {
+            // Here you can process the appointment data received from the API
+            console.log('Appointments:', appt[0]);
+            // For example, you can extract specific appointment details and include them in the patient object
+            // p.appointments = appt.map(appointment => ({
+            //   // Extract and format relevant appointment details
+            // }));
+          }
+
           ret.resolve(p);
         });
       } else {
@@ -85,6 +103,12 @@
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
+      id: {value: ''},
+      status: {value: ''},
+      description: {value: ''},
+      start_date: {value:''},
+      end_date: {value: ''},
+      actor:{value: ''},
     };
   }
 
