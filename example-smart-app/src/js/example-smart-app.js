@@ -24,6 +24,7 @@
         var appt = smart.patient.api.search({
                     type: 'Appointment',
                     query: {
+                      patient: patient,
                       date: {
                         $gte: '2023-12-30T09:00:00Z'
                       }
