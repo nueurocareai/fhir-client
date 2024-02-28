@@ -130,6 +130,7 @@
     return getQuantityValueAndUnit(formattedBPObservations[0]);
   }
 
+  
   function getQuantityValueAndUnit(ob) {
     if (typeof ob != 'undefined' &&
         typeof ob.valueQuantity != 'undefined' &&
