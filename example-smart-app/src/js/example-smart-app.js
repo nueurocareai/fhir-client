@@ -26,7 +26,7 @@
                     query: {
                       patient: patient,
                       date: {
-                        $ge: '2023-12-30T09:00:00Z'
+                        $gte: '2023-12-30'
                       }
                     }
                   });
