@@ -75,7 +75,7 @@
             // Here you can process the appointment data received from the API
             // Assuming appointmentData is an array of objects
           var listOfAppointments = [];
-
+          let appointmentData = appt.data.entry;
           for (var i = 0; i < appointmentData.length; i++) {
             let appointment = appointmentData[i];
             let id = appointment.resource.id;
