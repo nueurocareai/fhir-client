@@ -52,7 +52,7 @@
           var ldl = byCodes('2089-1');
 
           var p = defaultPatient();
-          var pApp = patientApp();
+          //var pApp = patientApp();
           p.birthdate = patient.birthDate;
           p.gender = gender;
           p.fname = fname;
@@ -81,13 +81,13 @@
             var endDate = appt.data.entry[0].resource.end;
             var actor = appt.data.entry[0].resource.participant[0].actor.display;
             var patient_name = patient.name[0].given.join(' ');
-            pApp.id = id;
-            pApp.status = status;
-            pApp.description = description;
-            pApp.start_date = startDate;
-            pApp.end_date = endDate;
-            pApp.actor = actor;
-            pApp.patient = patient_name;
+            p.id = id;
+            p.status = status;
+            p.description = description;
+            p.start_date = startDate;
+            p.end_date = endDate;
+            p.actor = actor;
+            p.patient = patient_name;
             // For example, you can extract specific appointment details and include them in the patient object
             // p.appointments = appt.map(appointment => ({
             //   // Extract and format relevant appointment details
@@ -172,13 +172,13 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
-    $('#id').html(pApp.id);
-    $('#status').html(pApp.status);
-    $('#description').html(pApp.description);
-    $('#start_date').html(pApp.start_date);
-    $('#end_date').html(pApp.end_date);
-    $('#actor').html(pApp.actor);
-    $('#patient').html(pApp.patient);
+    $('#id').html(p.id);
+    $('#status').html(p.status);
+    $('#description').html(p.description);
+    $('#start_date').html(p.start_date);
+    $('#end_date').html(p.end_date);
+    $('#actor').html(p.actor);
+    $('#patient').html(p.patient);
   };
 
 })(window);
