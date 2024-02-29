@@ -72,7 +72,6 @@
           // Process appointment data
           if (appt && appt.length > 0) {
             // Here you can process the appointment data received from the API
-            console.log('Appointments:', appt.data.entry[0]);
             var appointmentData = appt.data.entry[0];
             var id= appointmentData.resource.id;
             var status = appointmentData.resource.status;
