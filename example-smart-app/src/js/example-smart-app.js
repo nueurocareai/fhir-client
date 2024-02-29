@@ -24,8 +24,8 @@
         var appt = smart.patient.api.search({
                     type: 'Appointment',
                     query: {
-                       patient: patient.id,
-                      date:'ge2023-12-30T09:00:00Z'
+                      patient: patient.id,
+                      date: 'ge2023-12-30T09:00:00Z'
                     }
                   });
 
@@ -70,9 +70,24 @@
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
           // Process appointment data
-          if (appt && appt !== null) {
+          if (appt && appt.length > 0) {
             // Here you can process the appointment data received from the API
             console.log('Appointments:', appt.data.entry[0]);
+            var appointmentData = appt.data.entry[0];
+            var id= appointmentData.resource.id;
+            var status = appointmentData.resource.status;
+            var description = appointmentData.resource.description;
+            var startDate = appointmentData.resource.start;
+            var endDate = appointmentData.resource.end;
+            var actor = appointmentData.resource.participant[0].actor.display;
+            var patient_name = patient.name[0].given.join(' ');
+            p.id = id;
+            p.status = status;
+            p.description = description;
+            p.start_date = startDate;
+            p.end_date = endDate;
+            p.actor = actor;
+            p.patient = patient_name;
             // For example, you can extract specific appointment details and include them in the patient object
             // p.appointments = appt.map(appointment => ({
             //   // Extract and format relevant appointment details
@@ -108,6 +123,7 @@
       start_date: {value:''},
       end_date: {value: ''},
       actor:{value: ''},
+       patient:{value: ''},
     };
   }
 
@@ -128,7 +144,6 @@
     return getQuantityValueAndUnit(formattedBPObservations[0]);
   }
 
-  
   function getQuantityValueAndUnit(ob) {
     if (typeof ob != 'undefined' &&
         typeof ob.valueQuantity != 'undefined' &&
@@ -152,6 +167,13 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
+    $('#id').html(p.id);
+    $('#status').html(p.status);
+    $('#description').html(p.description);
+    $('#start_date').html(p.start_date);
+    $('#end_date').html(p.end_date);
+    $('#actor').html(p.actor);
+    $('#patient').html(p.patient);
   };
 
 })(window);
