@@ -182,8 +182,8 @@
             row.append($("<td>").text(data.id));
             row.append($("<td>").text(data.status));
             row.append($("<td>").text(data.description));
-            row.append($("<td>").text(data.start_date));
-            row.append($("<td>").text(data.end_date));
+            row.append($("<td>").text(data.startDate));
+            row.append($("<td>").text(data.endDate));
             row.append($("<td>").text(data.actor));
             row.append($("<td>").text(data.patient));
             $("#appointmentTable tbody").append(row);
