@@ -6,6 +6,7 @@
       console.log('Loading error', arguments);
       ret.reject();
     }
+
     function onReady(smart)  {
       if (smart.hasOwnProperty('patient')) {
         var patient = smart.patient;
@@ -51,7 +52,7 @@
           var ldl = byCodes('2089-1');
 
           var p = defaultPatient();
-          //var pApp = patientApp();
+          var pApp = patientApp();
           p.birthdate = patient.birthDate;
           p.gender = gender;
           p.fname = fname;
@@ -72,28 +73,33 @@
           // Process appointment data
           if (appt != null) {
             // Here you can process the appointment data received from the API
-            var appointmentData = appt.data.entry[0];
-            var id= appt.data.entry[0].resource.id;
-            var status = appt.data.entry[0].resource.status;
-            var description = appt.data.entry[0].resource.description;
-            var startDate = appt.data.entry[0].resource.start;
-            var endDate = appt.data.entry[0].resource.end;
-            var actor = appt.data.entry[0].resource.participant[0].actor.display;
-            var patient_name = patient.name[0].given.join(' ');
-            p.id = id;
-            p.status = status;
-            p.description = description;
-            p.start_date = startDate;
-            p.end_date = endDate;
-            p.actor = actor;
-            p.patient = patient_name;
-            // For example, you can extract specific appointment details and include them in the patient object
-            // p.appointments = appt.map(appointment => ({
-            //   // Extract and format relevant appointment details
-            // }));
+            // Assuming appointmentData is an array of objects
+          var listOfAppointments = [];
+
+          for (var i = 0; i < appointmentData.length; i++) {
+            let appointment = appointmentData[i];
+            let id = appointment.resource.id;
+            let status = appointment.resource.status;
+            let description = appointment.resource.description;
+            let startDate = appointment.resource.start;
+            let endDate = appointment.resource.end;
+            let actor = appointment.resource.participant[0].actor.display;
+
+            let appointmentDictionary = {
+              "id": id,
+              "status": status,
+              "description": description,
+              "startDate": startDate,
+              "endDate": endDate,
+              "actor": actor,
+              "patient": patient.name[0].given.join(' ')
+            };
+
+            listOfAppointments.push(appointmentDictionary);
+          }
           }
 
-          ret.resolve(p);
+          ret.resolve(p, listOfAppointments);
         });
       } else {
         onError();
@@ -159,7 +165,7 @@
     }
   }
 
-  window.drawVisualization = function(p) {
+  window.drawVisualization = function(p, appointments) {
     $('#holder').show();
     $('#loading').hide();
     $('#fname').html(p.fname);
@@ -171,13 +177,17 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
-    $('#id').html(p.id);
-    $('#status').html(p.status);
-    $('#description').html(p.description);
-    $('#start_date').html(p.start_date);
-    $('#end_date').html(p.end_date);
-    $('#actor').html(p.actor);
-    $('#patient').html(p.patient);
+     $.each(appointments, function(index, data) {
+            var row = $("<tr>");
+            row.append($("<td>").text(data.id));
+            row.append($("<td>").text(data.status));
+            row.append($("<td>").text(data.description));
+            row.append($("<td>").text(data.start_date));
+            row.append($("<td>").text(data.end_date));
+            row.append($("<td>").text(data.actor));
+            row.append($("<td>").text(data.patient));
+            $("#appointmentTable tbody").append(row);
+        });
   };
 
 })(window);
