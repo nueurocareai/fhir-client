@@ -70,7 +70,7 @@
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
           // Process appointment data
-          if (appt && appt.length > 0) {
+          if (appt && appt !== null) {
             // Here you can process the appointment data received from the API
             console.log('Appointments:', appt[0]);
             // For example, you can extract specific appointment details and include them in the patient object
