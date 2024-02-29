@@ -24,9 +24,7 @@
         var appt = smart.patient.api.search({
                     type: 'Appointment',
                     query: {
-                      date: {
-                        $ge: '2023-12-30T09:00:00Z'
-                      }
+                      date:'ge2023-12-30T09:00:00Z'
                     }
                   });
 
