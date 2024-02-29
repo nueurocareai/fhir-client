@@ -73,14 +73,13 @@
           // Process appointment data
           if (appt && appt.length > 0) {
             // Here you can process the appointment data received from the API
-            console.log('Appointments:', appt.data.entry[0]);
             var appointmentData = appt.data.entry[0];
-            var id= appointmentData.resource.id;
-            var status = appointmentData.resource.status;
-            var description = appointmentData.resource.description;
-            var startDate = appointmentData.resource.start;
-            var endDate = appointmentData.resource.end;
-            var actor = appointmentData.resource.participant[0].actor.display;
+            var id= appt.data.entry[0].resource.id;
+            var status = appt.data.entry[0].resource.status;
+            var description = appt.data.entry[0].resource.description;
+            var startDate = appt.data.entry[0].resource.start;
+            var endDate = appt.data.entry[0].resource.end;
+            var actor = appt.data.entry[0].resource.participant[0].actor.display;
             var patient_name = patient.name[0].given.join(' ');
             pApp.id = id;
             pApp.status = status;
