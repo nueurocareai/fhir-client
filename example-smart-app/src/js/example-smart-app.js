@@ -71,7 +71,7 @@
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
           // Process appointment data
-          if (appt && appt.length > 0) {
+          if (appt) {
             // Here you can process the appointment data received from the API
             var appointmentData = appt.data.entry[0];
             var id= appt.data.entry[0].resource.id;
