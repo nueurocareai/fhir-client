@@ -203,8 +203,8 @@
     var tbody = table.getElementsByTagName("tbody")[0];
 
     encounters.forEach(function(item) {
-    var keys = Object.keys(data);
-    var values = Object.values(data);
+    var keys = Object.keys(item);
+    var values = Object.values(item);
 
     // Dynamically populate table headers
     keys.forEach(function(key) {
