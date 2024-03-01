@@ -1,223 +1,166 @@
-(function(window){
-  window.extractData = function() {
-    var ret = $.Deferred();
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+    <title>Example-SMART-App</title>
 
-    function onError() {
-      console.log('Loading error', arguments);
-      ret.reject();
+    <link rel='stylesheet' type='text/css' href='./src/css/example-smart-app.css'>
+    <!--
+      Temporarily disable cerner-smart-embeddable-lib
+      <link rel='stylesheet' type='text/css' href='./lib/css/cerner-smart-embeddable-lib-1.0.0.min.css'>
+    -->
+  </head>
+  <body>
+    <div id='errors'>
+    </div>
+    <div id="loading" class="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+    <div id='holder' >
+      <h2>Example-SMART-App</h2>
+
+      <h2>Patient Resource</h2>
+      <table>
+        <tr>
+          <th>First Name:</th>
+          <td id='fname'></td>
+        </tr>
+        <tr>
+          <th>Last Name:</th>
+          <td id='lname'></td>
+        </tr>
+        <tr>
+          <th>Gender:</th>
+          <td id='gender'></td>
+        </tr>
+        <tr>
+          <th>Date of Birth:</th>
+          <td id='birthdate'></td>
+        </tr>
+      </table>
+      <h2>Observation Resource</h2>
+      <table>
+        <tr>
+          <th>Height:</th>
+          <td id='height'></td>
+        </tr>
+        <tr>
+          <th>Systolic Blood Pressure:</th>
+          <td id='systolicbp'></td>
+
+        </tr>
+        <tr>
+          <th>Diastolic Blood Pressure:</th>
+          <td id='diastolicbp'></td>
+        </tr>
+        <tr>
+          <th>LDL:</th>
+          <td id='ldl'></td>
+        </tr>
+        <tr>
+          <th>HDL:</th>
+          <td id='hdl'></td>
+        </tr>
+      </table>
+     <h2>Appointments</h2>
+<style>
+    body {
+        font-family: Arial, sans-serif;
     }
 
-    function onReady(smart)  {
-      if (smart.hasOwnProperty('patient')) {
-        var patient = smart.patient;
-        var pt = patient.read();
-        var obv = smart.patient.api.fetchAll({
-                    type: 'Observation',
-                    query: {
-                      code: {
-                        $or: ['http://loinc.org|8302-2', 'http://loinc.org|8462-4',
-                              'http://loinc.org|8480-6', 'http://loinc.org|2085-9',
-                              'http://loinc.org|2089-1', 'http://loinc.org|55284-4']
-                      }
-                    }
-                  });
-        var appt = smart.patient.api.search({
-                    type: 'Appointment',
-                    query: {
-                      patient: patient.id,
-                      date: 'ge2023-12-30T09:00:00Z'
-                    }
-                  });
-        // Encounter API call
-        var encounter = smart.patient.api.search({
-          type: 'Encounter',
-          query: {
-            patient: patient.id
-          }
-        });
-        $.when(pt, obv, appt, encounter).fail(onError);
-
-        $.when(pt, obv, appt, encounter).done(function(patient, obv, appt, encounter) {
-          var byCodes = smart.byCodes(obv, 'code');
-          var gender = patient.gender;
-
-          var fname = '';
-          var lname = '';
-
-          if (typeof patient.name[0] !== 'undefined') {
-            console.log( patient.name[0].family);
-            fname = patient.name[0].given.join(' ');
-            lname = patient.name[0].family;
-            //lname = patient.name[0].family.join(' ');
-          }
-
-          var height = byCodes('8302-2');
-          var systolicbp = getBloodPressureValue(byCodes('55284-4'),'8480-6');
-          var diastolicbp = getBloodPressureValue(byCodes('55284-4'),'8462-4');
-          var hdl = byCodes('2085-9');
-          var ldl = byCodes('2089-1');
-
-          var p = defaultPatient()
-          p.birthdate = patient.birthDate;
-          p.gender = gender;
-          p.fname = fname;
-          p.lname = lname;
-          p.height = getQuantityValueAndUnit(height[0]);
-
-          if (typeof systolicbp != 'undefined')  {
-            p.systolicbp = systolicbp;
-          }
-
-          if (typeof diastolicbp != 'undefined') {
-            p.diastolicbp = diastolicbp;
-          }
-
-          p.hdl = getQuantityValueAndUnit(hdl[0]);
-          p.ldl = getQuantityValueAndUnit(ldl[0]);
-
-          // Process appointment data
-          if (appt != null) {
-            // Here you can process the appointment data received from the API
-            // Assuming appointmentData is an array of objects
-          var listOfAppointments = [];
-          appointmentData = appt.data.entry;
-          for (var i = 0; i < appointmentData.length; i++) {
-            let appointment = appointmentData[i];
-            let id = appointment.resource.id;
-            let status = appointment.resource.status;
-            let description = appointment.resource.description;
-            let startDate = appointment.resource.start;
-            let endDate = appointment.resource.end;
-            let actor = appointment.resource.participant[0].actor.display;
-
-            let appointmentDictionary = {
-              "id": id,
-              "status": status,
-              "description": description,
-              "startDate": startDate,
-              "endDate": endDate,
-              "actor": actor,
-              "patient": patient.name[0].given.join(' ')
-            };
-
-            listOfAppointments.push(appointmentDictionary);
-          }
-          }
-            if (encounter != null) {
-            // Here you can process the appointment data received from the API
-            // Assuming appointmentData is an array of objects
-          var listOfEncounter = [];
-          var EncounterData = encounter.data.entry;
-          for (var i = 0; i < EncounterData.length; i++) {
-            let encounterData = EncounterData[i];
-            let divData = encounterData.resource.text.div
-
-            let encounterDictionary = {
-              "div": divData
-            };
-
-            listOfEncounter.push(encounterDictionary);
-          }
-          }
-
-          ret.resolve(p, listOfAppointments, listOfEncounter);
-        });
-      } else {
-        onError();
-      }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        margin: 0 auto;
     }
 
-    FHIR.oauth2.ready(onReady, onError);
-    return ret.promise();
-
-  };
-
-  function defaultPatient(){
-    return {
-      fname: {value: ''},
-      lname: {value: ''},
-      gender: {value: ''},
-      birthdate: {value: ''},
-      height: {value: ''},
-      systolicbp: {value: ''},
-      diastolicbp: {value: ''},
-      ldl: {value: ''},
-      hdl: {value: ''},
-
-    };
-  }
-
-  function getBloodPressureValue(BPObservations, typeOfPressure) {
-    var formattedBPObservations = [];
-    BPObservations.forEach(function(observation){
-      var BP = observation.component.find(function(component){
-        return component.code.coding.find(function(coding) {
-          return coding.code == typeOfPressure;
-        });
-      });
-      if (BP) {
-        observation.valueQuantity = BP.valueQuantity;
-        formattedBPObservations.push(observation);
-      }
-    });
-
-    return getQuantityValueAndUnit(formattedBPObservations[0]);
-  }
-
-  function getQuantityValueAndUnit(ob) {
-    if (typeof ob != 'undefined' &&
-        typeof ob.valueQuantity != 'undefined' &&
-        typeof ob.valueQuantity.value != 'undefined' &&
-        typeof ob.valueQuantity.unit != 'undefined') {
-          return ob.valueQuantity.value + ' ' + ob.valueQuantity.unit;
-    } else {
-      return undefined;
+    th, td {
+        padding: 10px;
+        border: 1px solid #dddddd;
+        text-align: left;
     }
-  }
 
-  window.drawVisualization = function(p, appointments, encounters) {
-    $('#holder').show();
-    $('#loading').hide();
-    $('#fname').html(p.fname);
-    $('#lname').html(p.lname);
-    $('#gender').html(p.gender);
-    $('#birthdate').html(p.birthdate);
-    $('#height').html(p.height);
-    $('#systolicbp').html(p.systolicbp);
-    $('#diastolicbp').html(p.diastolicbp);
-    $('#ldl').html(p.ldl);
-    $('#hdl').html(p.hdl);
-    $.each(appointments, function(index, data) {
-            var row = $("<tr>");
-            row.append($("<td>").text(data.id));
-            row.append($("<td>").text(data.status));
-            row.append($("<td>").text(data.description));
-            row.append($("<td>").text(data.start_date));
-            row.append($("<td>").text(data.end_date));
-            row.append($("<td>").text(data.actor));
-            row.append($("<td>").text(data.patient));
-            $("#appointmentTable tbody").append(row);
-        });
-    var tableBody = document.querySelector('#PatientEncounter tbody');
-    encounters.forEach(function(item) {
-        var divContent = item.div;
-        var tempElement = document.createElement('div');
-        tempElement.innerHTML = divContent;
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
 
-        var row = document.createElement('tr');
-        var cells = tempElement.querySelectorAll('p');
-        cells.forEach(function(cell) {
-            var cellText = cell.textContent.trim();
-            var colonIndex = cellText.indexOf(':');
-            var value = cellText.substring(colonIndex + 1).trim();
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
 
-            var td = document.createElement('td');
-            td.textContent = value;
-            row.appendChild(td);
-        });
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+</style>
+<table id="appointmentTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Actor</th>
+            <th>Patient</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Table body will be populated dynamically -->
+    </tbody>
+</table>
+        <h2>Patient Ecounter</h2>
+        <table id="PatientEncounter">
+            <thead>
+        <tr>
+            <th>Type</th>
+            <th>Patient</th>
+            <th>Location</th>
+            <th>Encounter Type:</th>
+            <th>Class</th>
+            <th>Status</th>
+            <th>Service Provider</th>
+        </tr>
+    </thead>
+             <tbody>
+        <!-- Table body will be populated dynamically -->
+    </tbody>
+</table>
+    </div>
+    <!-- Required JS files to enable this page to embed within an MPage -->
+    <!--
+      Temporarily disable cerner-smart-embeddable-lib
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js'></script>
+      <script src='./lib/js/cerner-smart-embeddable-lib-1.0.0.min.js'></script>
+    -->
 
-        tableBody.appendChild(row);
-    });
-  };
+    <!-- Application-level javascript-->
+    <script src='./src/js/example-smart-app.js'></script>
 
-})(window);
+    <!-- FHIR Client JS Library -->
+    <script src='./lib/js/fhir-client-v0.1.12.js'></script>
+
+    <!-- Prevent session bleed caused by single threaded embedded browser and sessionStorage API -->
+    <!-- https://github.com/cerner/fhir-client-cerner-additions -->
+    <script src='./lib/js/fhir-client-cerner-additions-1.0.0.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+      extractData().then(
+        //Display Patient Demographics and Observations if extractData was success
+        function(p, appointments, encounters) {
+          drawVisualization(p, appointments, encounters);
+        },
+
+        //Display 'Failed to call FHIR Service' if extractData failed
+        function() {
+          $('#loading').hide();
+          $('#errors').html('<p> Failed to call FHIR Service </p>');
+        }
+      );
+    </script>
+  </body>
+</html>
