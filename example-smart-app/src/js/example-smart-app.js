@@ -198,26 +198,43 @@
             row.append($("<td>").text(data.patient));
             $("#appointmentTable tbody").append(row);
         });
-    var tableBody = document.querySelector('#PatientEncounter tbody');
-    encounters.forEach(function(item) {
-        var divContent = item.div;
-        var tempElement = document.createElement('div');
-        tempElement.innerHTML = divContent;
+  var tableBody = document.querySelector('#PatientEncounter tbody');
+var headers = [];
 
-        var row = document.createElement('tr');
-        var cells = tempElement.querySelectorAll('p');
-        cells.forEach(function(cell) {
-            var cellText = cell.textContent.trim();
-            var colonIndex = cellText.indexOf(':');
-            var value = cellText.substring(colonIndex + 1).trim();
+encounters.forEach(function(item) {
+    var divContent = item.div;
+    var tempElement = document.createElement('div');
+    tempElement.innerHTML = divContent;
 
-            var td = document.createElement('td');
-            td.textContent = value;
-            row.appendChild(td);
-        });
+    var row = document.createElement('tr');
+    var cells = tempElement.querySelectorAll('p');
+    cells.forEach(function(cell) {
+        var cellText = cell.textContent.trim();
+        var colonIndex = cellText.indexOf(':');
+        var key = cellText.substring(0, colonIndex).trim();
+        var value = cellText.substring(colonIndex + 1).trim();
 
-        tableBody.appendChild(row);
+        // Store unique headers
+        if (!headers.includes(key)) {
+            headers.push(key);
+        }
+
+        var td = document.createElement('td');
+        td.textContent = value;
+        row.appendChild(td);
     });
+
+    tableBody.appendChild(row);
+});
+
+// Create table headers
+var tableHeader = document.querySelector('#PatientEncounter thead tr');
+headers.forEach(function(headerText) {
+    var th = document.createElement('th');
+    th.textContent = headerText;
+    tableHeader.appendChild(th);
+});
+
   };
 
 })(window);
