@@ -198,16 +198,15 @@
             row.append($("<td>").text(data.patient));
             $("#appointmentTable tbody").append(row);
         });
-    var table = document.getElementById("PatientEncounter");
+ var table = document.getElementById("PatientEncounter");
     var thead = table.getElementsByTagName("thead")[0];
     var tbody = table.getElementsByTagName("tbody")[0];
 
     // Create headers row if it doesn't exist
-    if (!thead.getElementsByTagName("tr")[0]) {
-        var headersRow = document.createElement("tr");
+    var headersRow = thead.getElementsByTagName("tr")[0];
+    if (!headersRow) {
+        headersRow = document.createElement("tr");
         thead.appendChild(headersRow);
-    } else {
-        var headersRow = thead.getElementsByTagName("tr")[0];
     }
 
     // Extracting keys from the first dictionary in the list
