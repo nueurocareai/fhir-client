@@ -200,7 +200,11 @@
         });
     var table = document.getElementById("PatientEncounter");
     var tbody = table.getElementsByTagName("tbody")[0];
-
+     // Check if tbody exists, if not, create it
+    if (!tbody) {
+        tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+    }
     encounters.forEach(function(item) {
     var tr = document.createElement("tr");
 
