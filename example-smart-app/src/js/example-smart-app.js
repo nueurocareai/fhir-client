@@ -198,57 +198,26 @@
             row.append($("<td>").text(data.patient));
             $("#appointmentTable tbody").append(row);
         });
-var table = document.getElementById("PatientEncounter");
-    if (!table) {
-        console.error("Table element not found");
-        return;
-    }
+    var tableBody = document.querySelector('#PatientEncounter tbody');
+    encounters.forEach(function(item) {
+        var divContent = item.div;
+        var tempElement = document.createElement('div');
+        tempElement.innerHTML = divContent;
 
-    var thead = table.getElementsByTagName("thead")[0];
-    if (!thead) {
-        thead = document.createElement("thead");
-        table.appendChild(thead);
-    }
+        var row = document.createElement('tr');
+        var cells = tempElement.querySelectorAll('p');
+        cells.forEach(function(cell) {
+            var cellText = cell.textContent.trim();
+            var colonIndex = cellText.indexOf(':');
+            var value = cellText.substring(colonIndex + 1).trim();
 
-    var tbody = table.getElementsByTagName("tbody")[0];
-    if (!tbody) {
-        tbody = document.createElement("tbody");
-        table.appendChild(tbody);
-    }
+            var td = document.createElement('td');
+            td.textContent = value;
+            row.appendChild(td);
+        });
 
-    // Create headers row if it doesn't exist
-    var headersRow = thead.getElementsByTagName("tr")[0];
-    if (!headersRow) {
-        headersRow = document.createElement("tr");
-        thead.appendChild(headersRow);
-    }
-
-    // Extracting keys from the first dictionary in the list
-    var keys = Object.keys(encounters[0]);
-
-    // Dynamically populate table headers
-    keys.forEach(function(key) {
-        var th = document.createElement("th");
-        th.textContent = key;
-        headersRow.appendChild(th);
+        tableBody.appendChild(row);
     });
-
-    // Dynamically populate table body with values
-    encounters.forEach(function(data) {
-        var tr = document.createElement("tr");
-
-        // Extracting values from the dictionary
-        var values = Object.values(data);
-
-        // Dynamically populate table body with values
-        values.forEach(function(value) {
-            var td = document.createElement("td");
-            td.innerHTML = value;
-            tr.appendChild(td);
-        });
-
-        tbody.appendChild(tr);
-        });
   };
 
 })(window);
