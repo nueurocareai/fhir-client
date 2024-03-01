@@ -249,10 +249,6 @@ var table = document.getElementById("PatientEncounter");
 
         tbody.appendChild(tr);
         });
-
-        tbody.appendChild(tr);
-});
-
   };
 
 })(window);
