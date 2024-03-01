@@ -29,7 +29,7 @@
                     }
                   });
         // Encounter API call
-        var encounter = smart.patient.api.fetchAll({
+        var encounter = smart.patient.api.search({
           type: 'Encounter',
           query: {
             patient: patient.id
@@ -57,8 +57,7 @@
           var hdl = byCodes('2085-9');
           var ldl = byCodes('2089-1');
 
-          var p = defaultPatient();
-          var pApp = patientApp();
+          var p = defaultPatient()
           p.birthdate = patient.birthDate;
           p.gender = gender;
           p.fname = fname;
