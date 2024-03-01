@@ -28,10 +28,16 @@
                       date: 'ge2023-12-30T09:00:00Z'
                     }
                   });
+        // Encounter API call
+        var encounter = smart.patient.api.fetchAll({
+          type: 'Encounter',
+          query: {
+            patient: patient.id
+          }
+        });
+        $.when(pt, obv, appt, encounter).fail(onError);
 
-        $.when(pt, obv, appt).fail(onError);
-
-        $.when(pt, obv, appt).done(function(patient, obv, appt) {
+        $.when(pt, obv, appt, encounter).done(function(patient, obv, appt, encounter) {
           var byCodes = smart.byCodes(obv, 'code');
           var gender = patient.gender;
 
@@ -75,7 +81,7 @@
             // Here you can process the appointment data received from the API
             // Assuming appointmentData is an array of objects
           var listOfAppointments = [];
-          let appointmentData = appt.data.entry;
+          appointmentData = appt.data.entry;
           for (var i = 0; i < appointmentData.length; i++) {
             let appointment = appointmentData[i];
             let id = appointment.resource.id;
@@ -98,8 +104,24 @@
             listOfAppointments.push(appointmentDictionary);
           }
           }
+            if (encounter != null) {
+            // Here you can process the appointment data received from the API
+            // Assuming appointmentData is an array of objects
+          var listOfEncounter = [];
+          var EncounterData = encounter.data.entry;
+          for (var i = 0; i < EncounterData.length; i++) {
+            let encounterData = EncounterData[i];
+            let divData = encounterData.resource.text.meta.div
 
-          ret.resolve(p, listOfAppointments);
+            let encounterDictionary = {
+              "div": divData
+            };
+
+            listOfEncounter.push(encounterDictionary);
+          }
+          }
+
+          ret.resolve(p, listOfAppointments, listOfEncounter);
         });
       } else {
         onError();
@@ -123,17 +145,6 @@
       ldl: {value: ''},
       hdl: {value: ''},
 
-    };
-  }
-    function patientApp(){
-    return {
-      id: {value: ''},
-      status: {value: ''},
-      description: {value: ''},
-      start_date: {value: ''},
-      end_date: {value: ''},
-      actor: {value: ''},
-      patient: {value: ''},
     };
   }
 
@@ -165,7 +176,7 @@
     }
   }
 
-  window.drawVisualization = function(p, appointments) {
+  window.drawVisualization = function(p, appointments, encounters) {
     $('#holder').show();
     $('#loading').hide();
     $('#fname').html(p.fname);
@@ -177,17 +188,37 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
-     $.each(appointments, function(index, data) {
+    $.each(appointments, function(index, data) {
             var row = $("<tr>");
             row.append($("<td>").text(data.id));
             row.append($("<td>").text(data.status));
             row.append($("<td>").text(data.description));
-            row.append($("<td>").text(data.startDate));
-            row.append($("<td>").text(data.endDate));
+            row.append($("<td>").text(data.start_date));
+            row.append($("<td>").text(data.end_date));
             row.append($("<td>").text(data.actor));
             row.append($("<td>").text(data.patient));
             $("#appointmentTable tbody").append(row);
         });
+    var tableBody = document.querySelector('#PatientEncounter tbody');
+    encounters.forEach(function(item) {
+        var divContent = item.div;
+        var tempElement = document.createElement('div');
+        tempElement.innerHTML = divContent;
+
+        var row = document.createElement('tr');
+        var cells = tempElement.querySelectorAll('p');
+        cells.forEach(function(cell) {
+            var cellText = cell.textContent.trim();
+            var colonIndex = cellText.indexOf(':');
+            var value = cellText.substring(colonIndex + 1).trim();
+
+            var td = document.createElement('td');
+            td.textContent = value;
+            row.appendChild(td);
+        });
+
+        tableBody.appendChild(row);
+    });
   };
 
 })(window);
