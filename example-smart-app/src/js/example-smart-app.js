@@ -110,7 +110,7 @@
           var EncounterData = encounter.data.entry;
           for (var i = 0; i < EncounterData.length; i++) {
             let encounterData = EncounterData[i];
-            let divData = encounterData.resource.text.meta.div
+            let divData = encounterData.resource.text.div
 
             let encounterDictionary = {
               "div": divData
