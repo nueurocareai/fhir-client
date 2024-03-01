@@ -199,12 +199,26 @@
             $("#appointmentTable tbody").append(row);
         });
     var table = document.getElementById("PatientEncounter");
+    var thead = table.getElementsByTagName("thead")[0];
     var tbody = table.getElementsByTagName("tbody")[0];
-     // Check if tbody exists, if not, create it
-    if (!tbody) {
-        tbody = document.createElement("tbody");
-        table.appendChild(tbody);
+
+    // Create headers row if it doesn't exist
+    if (!thead.getElementsByTagName("tr")[0]) {
+        var headersRow = document.createElement("tr");
+        thead.appendChild(headersRow);
+    } else {
+        var headersRow = thead.getElementsByTagName("tr")[0];
     }
+
+    // Extracting keys from the first dictionary in the list
+    var keys = Object.keys(dataList[0]);
+
+    // Dynamically populate table headers
+    keys.forEach(function(key) {
+        var th = document.createElement("th");
+        th.textContent = key;
+        headersRow.appendChild(th);
+    });
     encounters.forEach(function(item) {
     var tr = document.createElement("tr");
 
