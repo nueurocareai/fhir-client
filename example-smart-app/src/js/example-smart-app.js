@@ -198,9 +198,23 @@
             row.append($("<td>").text(data.patient));
             $("#appointmentTable tbody").append(row);
         });
- var table = document.getElementById("PatientEncounter");
+var table = document.getElementById("PatientEncounter");
+    if (!table) {
+        console.error("Table element not found");
+        return;
+    }
+
     var thead = table.getElementsByTagName("thead")[0];
+    if (!thead) {
+        thead = document.createElement("thead");
+        table.appendChild(thead);
+    }
+
     var tbody = table.getElementsByTagName("tbody")[0];
+    if (!tbody) {
+        tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+    }
 
     // Create headers row if it doesn't exist
     var headersRow = thead.getElementsByTagName("tr")[0];
@@ -218,17 +232,22 @@
         th.textContent = key;
         headersRow.appendChild(th);
     });
-    encounters.forEach(function(item) {
-    var tr = document.createElement("tr");
+
+    // Dynamically populate table body with values
+    encounters.forEach(function(data) {
+        var tr = document.createElement("tr");
 
         // Extracting values from the dictionary
-        var values = Object.values(item);
+        var values = Object.values(data);
 
         // Dynamically populate table body with values
         values.forEach(function(value) {
             var td = document.createElement("td");
             td.innerHTML = value;
             tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
         });
 
         tbody.appendChild(tr);
