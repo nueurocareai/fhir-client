@@ -211,7 +211,7 @@
     }
 
     // Extracting keys from the first dictionary in the list
-    var keys = Object.keys(dataList[0]);
+    var keys = Object.keys(encounters[0]);
 
     // Dynamically populate table headers
     keys.forEach(function(key) {
