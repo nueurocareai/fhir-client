@@ -80,6 +80,7 @@
             // Assuming appointmentData is an array of objects
           var listOfAppointments = [];
           appointmentData = appt.data.entry;
+            if (Array.isArray(appointmentData)) {
           for (var i = 0; i < appointmentData.length; i++) {
             let appointment = appointmentData[i];
             let id = appointment.resource.id;
@@ -100,6 +101,7 @@
             };
 
             listOfAppointments.push(appointmentDictionary);
+          }
           }
           }
             if (encounter != null) {
