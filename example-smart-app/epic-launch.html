@@ -27,6 +27,7 @@
     <script>
       FHIR.oauth2.authorize({
         'client_id': '7b955c3f-134b-4d2f-897b-49397ca7f8a7',
+        'redirect_uri': 'http://localhost:8001/fhir-app/',
         'scope':  'patient/*.read patient/Observation.read launch online_access openid profile'
       });
     </script>
