@@ -8,9 +8,8 @@
     }
 
     function onReady(smart)  {
-      if (smart.hasOwnProperty('patient')) {
-        var patientId = 'eW14uhl2OLK8k0.bB15kP.g3'; // Replace 'your_patient_id_here' with your actual patient ID
-        var obv = smart.patient.api.fetchAll({
+      var patientId = 'your_patient_id_here'; // Replace 'your_patient_id_here' with your actual patient ID
+      var obv = smart.patient.api.fetchAll({
                     type: 'Observation',
                     query: {
                       subject: patientId, // Use the patient ID here
@@ -22,49 +21,46 @@
                     }
                   });
 
-        $.when(obv).fail(onError);
+      $.when(obv).fail(onError);
 
-        $.when(obv).done(function(obv) {
-          var byCodes = smart.byCodes(obv, 'code');
-          var gender = smart.patient.gender;
+      $.when(obv).done(function(obv) {
+        var byCodes = smart.byCodes(obv, 'code');
+        var gender = smart.patient.gender;
 
-          var fname = '';
-          var lname = '';
+        var fname = '';
+        var lname = '';
 
-          if (typeof smart.patient.name[0] !== 'undefined') {
-            fname = smart.patient.name[0].given.join(' ');
-            lname = smart.patient.name[0].family.join(' ');
-          }
+        if (typeof smart.patient.name[0] !== 'undefined') {
+          fname = smart.patient.name[0].given.join(' ');
+          lname = smart.patient.name[0].family.join(' ');
+        }
 
-          var height = byCodes('8302-2');
-          var systolicbp = getBloodPressureValue(byCodes('55284-4'),'8480-6');
-          var diastolicbp = getBloodPressureValue(byCodes('55284-4'),'8462-4');
-          var hdl = byCodes('2085-9');
-          var ldl = byCodes('2089-1');
+        var height = byCodes('8302-2');
+        var systolicbp = getBloodPressureValue(byCodes('55284-4'),'8480-6');
+        var diastolicbp = getBloodPressureValue(byCodes('55284-4'),'8462-4');
+        var hdl = byCodes('2085-9');
+        var ldl = byCodes('2089-1');
 
-          var p = defaultPatient();
-          p.birthdate = smart.patient.birthDate;
-          p.gender = gender;
-          p.fname = fname;
-          p.lname = lname;
-          p.height = getQuantityValueAndUnit(height[0]);
+        var p = defaultPatient();
+        p.birthdate = smart.patient.birthDate;
+        p.gender = gender;
+        p.fname = fname;
+        p.lname = lname;
+        p.height = getQuantityValueAndUnit(height[0]);
 
-          if (typeof systolicbp != 'undefined')  {
-            p.systolicbp = systolicbp;
-          }
+        if (typeof systolicbp != 'undefined')  {
+          p.systolicbp = systolicbp;
+        }
 
-          if (typeof diastolicbp != 'undefined') {
-            p.diastolicbp = diastolicbp;
-          }
+        if (typeof diastolicbp != 'undefined') {
+          p.diastolicbp = diastolicbp;
+        }
 
-          p.hdl = getQuantityValueAndUnit(hdl[0]);
-          p.ldl = getQuantityValueAndUnit(ldl[0]);
+        p.hdl = getQuantityValueAndUnit(hdl[0]);
+        p.ldl = getQuantityValueAndUnit(ldl[0]);
 
-          ret.resolve(p);
-        });
-      } else {
-       onError();
-      }
+        ret.resolve(p);
+      });
     }
 
     FHIR.oauth2.ready(onReady, onError);
