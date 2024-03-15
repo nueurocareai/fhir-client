@@ -8,8 +8,8 @@
     }
 
     function onReady(smart)  {
-      var patientId = 'eW14uhl2OLK8k0.bB15kP.g3'; // Replace 'your_patient_id_here' with your actual patient ID
-      var obv = smart.patient.api.fetchAll({
+      var patientId = 'eW14uhl2OLK8k0.bB15kP.g3'; // Replace with actual patient ID
+      var obv = smart.api.fetchAll({
                     type: 'Observation',
                     query: {
                       subject: patientId, // Use the patient ID here
@@ -25,15 +25,9 @@
 
       $.when(obv).done(function(obv) {
         var byCodes = smart.byCodes(obv, 'code');
-        var gender = smart.patient.gender;
-
-        var fname = '';
-        var lname = '';
-
-        if (typeof smart.patient.name[0] !== 'undefined') {
-          fname = smart.patient.name[0].given.join(' ');
-          lname = smart.patient.name[0].family.join(' ');
-        }
+        var gender = ''; // Epic doesn't return gender information
+        var fname = ''; // Epic doesn't return name information
+        var lname = ''; // Epic doesn't return name information
 
         var height = byCodes('8302-2');
         var systolicbp = getBloodPressureValue(byCodes('55284-4'),'8480-6');
@@ -42,7 +36,7 @@
         var ldl = byCodes('2089-1');
 
         var p = defaultPatient();
-        p.birthdate = smart.patient.birthDate;
+        p.birthdate = ''; // Epic doesn't return birthdate information
         p.gender = gender;
         p.fname = fname;
         p.lname = lname;
