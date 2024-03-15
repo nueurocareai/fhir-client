@@ -8,7 +8,7 @@
     }
 
     function onReady(smart)  {
-      var patientId = 'your_patient_id_here'; // Replace 'your_patient_id_here' with your actual patient ID
+      var patientId = 'eW14uhl2OLK8k0.bB15kP.g3'; // Replace 'your_patient_id_here' with your actual patient ID
       var obv = smart.patient.api.fetchAll({
                     type: 'Observation',
                     query: {
