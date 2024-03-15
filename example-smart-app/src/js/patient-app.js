@@ -8,13 +8,12 @@
     }
 
     function onReady(smart)  {
-      // if (smart.hasOwnProperty('patient')) {
+      if (smart.hasOwnProperty('patient')) {
         var patient = smart.patient;
         var pt = patient.read();
         var obv = smart.patient.api.fetchAll({
                     type: 'Observation',
                     query: {
-                      subject: 'eW14uhl2OLK8k0.bB15kP.g3',
                       code: {
                         $or: ['http://loinc.org|8302-2', 'http://loinc.org|8462-4',
                               'http://loinc.org|8480-6', 'http://loinc.org|2085-9',
@@ -63,9 +62,9 @@
 
           ret.resolve(p);
         });
-      // } else {
-      //   onError();
-      // }
+      } else {
+       onError();
+      }
     }
 
     FHIR.oauth2.ready(onReady, onError);
