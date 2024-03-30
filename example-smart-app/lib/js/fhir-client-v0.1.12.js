@@ -17412,14 +17412,14 @@ BBClient.authorize = function(params, errback){
 
     console.log("sending client reg", params.client);
 
-    var redirect_to=params.provider.oauth2.authorize_uri + "?" + 
-      "client_id="+encodeURIComponent(client.client_id)+"&"+
+    var redirect_to=params.provider.oauth2.authorize_uri + "?" +
       "response_type="+encodeURIComponent(params.response_type)+"&"+
+      "client_id="+encodeURIComponent(client.client_id)+"&"+
       "scope="+encodeURIComponent(client.scope)+"&"+
       "redirect_uri="+encodeURIComponent(client.redirect_uri)+"&"+
       "state="+encodeURIComponent(state)+"&"+
       "aud="+encodeURIComponent(params.server)+"&"+
-      "code_challenge="+encodeURIComponent('P1qG6SZBYhosk-Vbq1j1XIbYOAvBNkkGTLeQ7dizYtY')+"&"+
+      "code_challenge="+encodeURIComponent('WuCtR95rLpIeVdurd5vHEUffSsR-doTAIodTxqT-z9M')+"&"+
       "code_challenge_method="+encodeURIComponent('S256');
     
     if (typeof client.launch !== 'undefined' && client.launch) {
