@@ -17420,7 +17420,7 @@ BBClient.authorize = function(params, errback){
       "state="+encodeURIComponent(state)+"&"+
       "aud="+encodeURIComponent("https://staging-fhir.ecwcloud.com/fhir/r4/FFBJCD")+"&"+
       "code_challenge="+encodeURIComponent('WuCtR95rLpIeVdurd5vHEUffSsR-doTAIodTxqT-z9M')+"&"+
-      "code_challenge_method="+encodeURIComponent('S256'));
+      "code_challenge_method="+encodeURIComponent('S256');
    //if (typeof client.launch !== 'undefined' && client.launch) {
     //}
 	  
