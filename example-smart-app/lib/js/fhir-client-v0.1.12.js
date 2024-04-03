@@ -17275,7 +17275,7 @@ function providers(fhirServiceUrl, provider, callback, errback){
 
   Adapter.get().http({
     method: "GET",
-    url: stripTrailingSlash(fhirServiceUrl) + "/metadata"
+    url: stripTrailingSlash("https://staging-fhir.ecwcloud.com/fhir/r4/FFBJCD") + "/metadata"
   }).then(
     function(r){
       var res = {
