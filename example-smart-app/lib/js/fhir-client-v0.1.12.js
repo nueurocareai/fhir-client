@@ -17418,12 +17418,12 @@ BBClient.authorize = function(params, errback){
       "scope="+encodeURIComponent(client.scope)+"&"+
       "redirect_uri="+encodeURIComponent(client.redirect_uri)+"&"+
       "state="+encodeURIComponent(state)+"&"+
-      "aud="+encodeURIComponent(params.server)+"&"+
+      "aud="+encodeURIComponent("https://staging-fhir.ecwcloud.com/fhir/r4/FFBJCD")+"&"+
       "code_challenge="+encodeURIComponent('WuCtR95rLpIeVdurd5vHEUffSsR-doTAIodTxqT-z9M')+"&"+
       "code_challenge_method="+encodeURIComponent('S256');
     
     if (typeof client.launch !== 'undefined' && client.launch) {
-       redirect_to += "&launch="+encodeURIComponent(client.launch);
+       redirect_to += "&launch="+encodeURIComponent("Dvb0mgjXktTB4tQ2drAcUTno1H7ifzeuLf8FOzJfuYbqdWw1fus+ojhY9eovflX77b0Wc7Y2Sse6cKzKGPQYaiJrkuxMjRoaGH1u6g+a8Wk1CruvARQSXUftm5QzszWwhAQ6j21XoI+bfg6qjsqVCLe1gXfKbsPn5o0bBJXwpU5Xy2AD4AKGccSC3DGyOcxn762F7QXy3tKRBeQLhcdi34rpfLmJfHlB1VXykjZhtUP2d7YgH8r4zK6WXPcsg191l5tc5PgeLBKQCpvHvwFN38abkMx7NI47eWVHEL6e4auupHMdacDZNcy6i4gok5weFGMGq/9yfYtxCwvDTA+6eheyuzJsjS5SdfksQ4wrQGIKKmcIR8eQjCwlVZmCNK5oL+GGD5ZdvdqmF8zr6gu5WtAj3iesKY3S33Ks5nZPQP862XUhkarbU6F49CH1cyV3dszgU/ddfA45MqvhExaz3QGzF3qCHDBDrzw9Y1OVVESi7ZlU3ddS2vkzgy1qipNTe0NrOnP4U8qNXJL0YrNeXnLL7GMi3qwXo6cwIqBqfFlDLAGeXfgjiqCja/lnY0BpWxAm95hMTmOJ174LoY0jlDZVAv9PFRGaWHBF3lN/qvq/KwrSQ5QHhMwUr9ZoI3haPAvlnAEG6hPSzXPC8/utLjvx4Lb/vTEcZKG6evO8cGZ+InWpCJ2aExi4pt+KBWnA+vw0GJun1Huc9xudhV+Fi515IrMV6ZKKp2Oga6ulcFWOIQgAYkByXD5JmYcm2Q/QUHNKybVx/dmTdQFGqL9qoMsGjjKZUPCNxcaBHDjSGNC1wAf4nwasNuGgIX/59enNFLEurlvRGzO0fb5G+r8VKfeYlsxzKLONfaHughM0G5ItA7JG9MDCdzA/LGJRpzla3NHO1kqAJ7GBR+AOkToSDUYcdThea0PRc8c9C7IlwiCw+z6WFvY42oY6/SoOfFMLfbRNJ3PO0SCo3Cknm2q2rZYooO9w1Tq1hA==");
     }
 
     window.location.href = redirect_to;
